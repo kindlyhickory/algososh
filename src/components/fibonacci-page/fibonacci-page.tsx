@@ -10,7 +10,7 @@ export const FibonacciPage: React.FC = () => {
 
   const [loader, setLoader] = useState(false);
   const [inputVal, setInputVal] = useState('');
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true );
   const [fibonacciArr, setFibonacciArr] = useState<Array<number>>([]);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -50,9 +50,11 @@ export const FibonacciPage: React.FC = () => {
           <Input
               extraClass={styles.inputContainer__input}
               maxLength={11}
+              max={11}
               isLimitText={true}
               value={inputVal}
               onChange={onChange}
+              type="number"
           />
           <Button
               text="Рассчитать"

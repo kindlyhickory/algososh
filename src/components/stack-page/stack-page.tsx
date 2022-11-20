@@ -77,6 +77,7 @@ export const StackPage: React.FC = () => {
         <Button
           text="Очистить"
           onClick={handleReset}
+          disabled={!stackItems.length}
         />
       </div>
       <ul className={styles.circlesBox} >

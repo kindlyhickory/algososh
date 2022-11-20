@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useMemo, useState } from "react";
+  import React, { ChangeEvent, useMemo, useState } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
@@ -246,14 +246,14 @@ export const ListPage: React.FC = () => {
                 text="Удалить из head"
                 onClick={deleteFromTheHead}
                 isLoader={ loading && buttonName === ButtonName.DeleteFromTheHead }
-                disabled={ loading }
+                disabled={ loading || arr.length === 0}
             />
             <Button
                 extraClass={styles.button}
                 text="Удалить из tail"
                 onClick={deleteFromTheTail}
                 isLoader={ loading && buttonName === ButtonName.DeleteFromTheTail  }
-                disabled={ loading }
+                disabled={ loading || arr.length === 0}
             />
           </div>
           <div className={styles.manageContainer__item}>
@@ -272,14 +272,14 @@ export const ListPage: React.FC = () => {
                 text="Добавить по индексу"
                 onClick={addByIndex}
                 isLoader={loading && buttonName === ButtonName.AddByIndex }
-                disabled={ loading || !inputValue || !index }
+                disabled={ loading || !inputValue || !index || Number(index) > arr.length - 1}
             />
             <Button
                 extraClass={styles.indexButton}
                 text="Удалить по индексу"
                 onClick={deleteByIndex}
                 isLoader={loading && buttonName === ButtonName.DeleteByIndex }
-                disabled={loading || index === '' }
+                disabled={loading || index === '' || Number(index) > arr.length - 1}
             />
           </div>
         </div>

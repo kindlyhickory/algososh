@@ -27,6 +27,7 @@ export const StringComponentContent: React.FC = () => {
     }
 
     const reverse = async (string: string) => {
+        setLoader(!loader);
         const arr = string.split('').map(word => {
             return {
                 value: word,
@@ -52,12 +53,11 @@ export const StringComponentContent: React.FC = () => {
 
             setStrArr([...arr]);
         }
+        setLoader(false);
     }
 
     const onButtonClick = () => {
-        setLoader(true);
         reverse(inputVal);
-        setLoader(false);
         console.log(strArr);
     }
 
