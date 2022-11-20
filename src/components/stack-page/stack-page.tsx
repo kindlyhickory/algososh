@@ -7,6 +7,7 @@ import {ElementStates} from "../../types/element-states";
 import {Stack} from "../../data-structures/stack";
 import {delay} from "../../utils/utils";
 import {Circle} from "../ui/circle/circle";
+import {useForm} from "../../hooks/useForm";
 
 type TStackElem = {
   value: string;
@@ -14,22 +15,19 @@ type TStackElem = {
 };
 
 export const StackPage: React.FC = () => {
-  const [inputVal, setInputVal] = useState('');
+  const {values, handleChange, setValues} = useForm({stackInput: ''});
+
   const [stackItems, setStackItems] = useState<TStackElem[]>([]);
   const [stack] = useState(new Stack<TStackElem>());
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputVal(e.target.value);
-  };
-
   const setPosition = (index: number, arr: TStackElem[]): string => index === arr.length - 1 ? 'top' : ''
   const handleAdd = async () => {
-    if (inputVal) {
+    if (values.stackInput) {
       stack.push({
-        value: inputVal,
+        value: values.stackInput,
         color: ElementStates.Changing
       })
-      setInputVal('');
+      setValues({...values, stackInput: ''});
       setStackItems([...stack.getElements()]);
       await delay(300);
       stack.peek.color = ElementStates.Default;
@@ -55,16 +53,17 @@ export const StackPage: React.FC = () => {
         <div className={styles.manageContainer__stackButtons}>
           <Input
             extraClass={styles.input}
-            onChange={onChange}
+            onChange={handleChange}
             isLimitText={true}
             type="text"
-            value={inputVal}
+            value={values.stackInput}
             maxLength={4}
+            name="stackInput"
           />
           <Button
             extraClass={styles.addButton}
             text='Добавить'
-            disabled={!inputVal}
+            disabled={!values.stackInput}
             onClick={handleAdd}
           />
           <Button

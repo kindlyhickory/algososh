@@ -5,11 +5,13 @@ import {Input} from "../ui/input/input";
 import {Button} from "../ui/button/button";
 import {delay, getFibonacciNumbers} from "../../utils/utils";
 import {Circle} from "../ui/circle/circle";
+import {useForm} from "../../hooks/useForm";
 
 export const FibonacciPage: React.FC = () => {
 
+  const {values, handleChange, setValues} = useForm({fibonacciInput: ''});
   const [loader, setLoader] = useState(false);
-  const [inputVal, setInputVal] = useState('');
+  // const [inputVal, setInputVal] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true );
   const [fibonacciArr, setFibonacciArr] = useState<Array<number>>([]);
 
@@ -20,7 +22,7 @@ export const FibonacciPage: React.FC = () => {
     } else if (Number(inputArr[0]) >= 2 && inputArr.length ===2) {
       setIsButtonDisabled(true)
     } else
-      setInputVal(event.target.value);
+      setValues({...values, fibonacciInput: event.target.value});
       setIsButtonDisabled(false);
       if (event.target.value === '') {
         setIsButtonDisabled(true);
@@ -38,8 +40,8 @@ export const FibonacciPage: React.FC = () => {
   }
 
   const handleButton = () => {
-    if (inputVal) {
-        visualise(inputVal);
+    if (values.fibonacciInput) {
+        visualise(values.fibonacciInput);
       }
     }
 
@@ -49,12 +51,13 @@ export const FibonacciPage: React.FC = () => {
         <div className={styles.inputContainer}>
           <Input
               extraClass={styles.inputContainer__input}
-              maxLength={11}
-              max={11}
+              maxLength={19}
+              max={19}
               isLimitText={true}
-              value={inputVal}
+              value={values.fibonacciInput}
               onChange={onChange}
               type="number"
+              name="fibonacciInput"
           />
           <Button
               text="Рассчитать"

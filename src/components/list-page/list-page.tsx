@@ -8,6 +8,7 @@ import { ArrowIcon } from "../ui/icons/arrow-icon";
 import { ElementStates } from "../../types/element-states";
 import {delay, getRandomInt} from "../../utils/utils";
 import {LinkedList} from "../../data-structures/list";
+  import {useForm} from "../../hooks/useForm";
 
 type TItem = {
   value: string;
@@ -24,8 +25,11 @@ enum ButtonName {
 };
 
 export const ListPage: React.FC = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [index, setIndex] = useState('');
+
+  const {values, handleChange, setValues} = useForm({listInput: '', indexInput: ''});
+
+  // const [inputValue, setInputValue] = useState('');
+  // const [index, setIndex] = useState('');
   const [loading, setLoading] = useState(false);
   const [addToHeadOperation, setAddToHeadOperation] = useState(false);
   const [addToTailOperation, setAddToTailOperation] = useState(false);
@@ -46,22 +50,22 @@ export const ListPage: React.FC = () => {
 
   const [arr, setArr] = useState<TItem[]>(list.getArrWithColor());
 
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const onIndexChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setIndex(e.target.value);
-  };
+  // const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setInputValue(e.target.value);
+  // };
+  //
+  // const onIndexChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setIndex(e.target.value);
+  // };
 
   const addToHead = async () => {
-    if (inputValue && list.listLength < 6) {
+    if (values.listInput && list.listLength < 6) {
       setButtonName(ButtonName.AddToHead);
       setLoading(true);
       setInputValueIndex(0);
       setAddToHeadOperation(true);
       await delay(500);
-      list.prepend(inputValue);
+      list.prepend(values.listInput);
       setAddToHeadOperation(false);
       const newArr = list.getArrWithColor();
       newArr[0].color = ElementStates.Modified;
@@ -69,20 +73,20 @@ export const ListPage: React.FC = () => {
       await delay(500);
       newArr[0].color = ElementStates.Default;
       setArr(newArr);
-    };
-    setInputValue('');
+    }
+    setValues({...values, listInput: ''});
     setLoading(false);
     setButtonName('');
   };
 
   const addToTail = async () => {
-    if (inputValue && list.listLength < 6) {
+    if (values.listInput && list.listLength < 6) {
       setButtonName(ButtonName.AddToTail)
       setLoading(true);
       setInputValueIndex(list.listLength - 1);
       setAddToTailOperation(true);
       await delay(500);
-      list.append(inputValue);
+      list.append(values.listInput);
       setAddToTailOperation(false);
       const newArr = list.getArrWithColor();
       newArr[newArr.length - 1].color = ElementStates.Modified;
@@ -91,7 +95,7 @@ export const ListPage: React.FC = () => {
       newArr[newArr.length - 1].color = ElementStates.Default;
       setArr(newArr);
     };
-    setInputValue('');
+    setValues({...values, listInput: ''});
     setLoading(false);
     setButtonName('');
   };
@@ -135,59 +139,57 @@ export const ListPage: React.FC = () => {
   };
 
   const addByIndex = async () => {
-    if (Number(index) < 5 && list.listLength < 6) {
-      setButtonName(ButtonName.AddByIndex);
-      setLoading(true);
-      setAddByIndexOperation(true);
-      const newArr = list.getArrWithColor();
-      for (let i = 0; i <= Number(index); i++) {
-        setInputValueIndex(i);
-        await delay(500);
-        if (i < Number(index)) {
-          newArr[i].color = ElementStates.Changing;
-          setArr(newArr);
-        };
-      };
-      setAddByIndexOperation(false);
-      setInputValueIndex(Number(''));
-      list.addByIndex(inputValue, Number(index));
-      const finalArr = list.getArrWithColor();
-      finalArr[Number(index)].color = ElementStates.Modified;
-
-      setArr(finalArr);
+    setButtonName(ButtonName.AddByIndex);
+    setLoading(true);
+    setAddByIndexOperation(true);
+    const newArr = list.getArrWithColor();
+    for (let i = 0; i <= Number(values.indexInput); i++) {
+      setInputValueIndex(i);
       await delay(500);
-      finalArr[Number(index)].color = ElementStates.Default;
-      setArr(finalArr);
+      if (i < Number(values.indexInput)) {
+        newArr[i].color = ElementStates.Changing;
+        setArr(newArr);
+      };
     };
+    setAddByIndexOperation(false);
+    setInputValueIndex(Number(''));
+    list.addByIndex(values.listInput, Number(values.indexInput));
+    const finalArr = list.getArrWithColor();
+    finalArr[Number(values.indexInput)].color = ElementStates.Modified;
+
+    setArr(finalArr);
+    await delay(500);
+    finalArr[Number(values.indexInput)].color = ElementStates.Default;
+    setArr(finalArr);
     setLoading(false);
-    setInputValue('');
-    setIndex('');
+    setValues({...values, listInput: ''});
+    setValues({...values, indexInput: ''});
     setButtonName('');
   };
 
   const deleteByIndex = async () => {
-    if (Number(index) < list.listLength && Number(index) < 7) {
+    if (Number(values.indexInput) < list.listLength && Number(values.indexInput) < 7) {
       setButtonName(ButtonName.DeleteByIndex);
       setLoading(true);
       const newArr = list.getArrWithColor();
-      for (let i = 0; i <= Number(index); i++) {
+      for (let i = 0; i <= Number(values.indexInput); i++) {
         await delay(500);
         newArr[i].color = ElementStates.Changing;
         setArr([...newArr]);
       };
       await delay(500);
-      setCircleTempValue(newArr[Number(index)].value);
-      newArr[Number(index)].value = '';
+      setCircleTempValue(newArr[Number(values.indexInput)].value);
+      newArr[Number(values.indexInput)].value = '';
       setDeleteByIndexOperation(true);
-      newArr[Number(index)].color = ElementStates.Default;
-      setInputValueIndex(Number(index));
+      newArr[Number(values.indexInput)].color = ElementStates.Default;
+      setInputValueIndex(Number(values.indexInput));
       await delay(500);
-      list.deleteByIndex(Number(index));
+      list.deleteByIndex(Number(values.indexInput));
       setArr(list.getArrWithColor());
       setDeleteByIndexOperation(false);
       setLoading(false);
       setButtonName('');
-      setIndex('');
+      setValues({...values, indexInput: ''});
     }
   };
 
@@ -223,23 +225,24 @@ export const ListPage: React.FC = () => {
                 placeholder="Введите значение"
                 maxLength={4}
                 isLimitText={true}
-                value={inputValue}
-                onChange={onInputChange}
+                value={values.listInput}
+                onChange={handleChange}
                 disabled={loading}
+                name="listInput"
             />
             <Button
                 extraClass={styles.button}
                 text="Добавить в head"
                 onClick={addToHead}
                 isLoader={ loading && buttonName === ButtonName.AddToHead }
-                disabled={inputValue === '' || loading}
+                disabled={values.listInput === '' || loading}
             />
             <Button
                 extraClass={styles.button}
                 text="Добавить в tail"
                 onClick={addToTail}
                 isLoader={ loading && buttonName === ButtonName.AddToTail}
-                disabled={inputValue === '' || loading}
+                disabled={values.listInput === '' || loading}
             />
             <Button
                 extraClass={styles.button}
@@ -260,26 +263,27 @@ export const ListPage: React.FC = () => {
             <Input
                 extraClass={styles.input}
                 placeholder="Введите индекс"
-                max={5}
+                max={arr.length - 1}
                 min='0'
                 type="number"
-                value={index}
-                onChange={onIndexChange}
+                value={values.indexInput}
+                onChange={handleChange}
                 disabled={loading}
+                name="indexInput"
             />
             <Button
                 extraClass={styles.indexButton}
                 text="Добавить по индексу"
                 onClick={addByIndex}
                 isLoader={loading && buttonName === ButtonName.AddByIndex }
-                disabled={ loading || !inputValue || !index || Number(index) > arr.length - 1}
+                disabled={ loading || !values.listInput || !values.indexInput || Number(values.indexInput) > arr.length - 1}
             />
             <Button
                 extraClass={styles.indexButton}
                 text="Удалить по индексу"
                 onClick={deleteByIndex}
                 isLoader={loading && buttonName === ButtonName.DeleteByIndex }
-                disabled={loading || index === '' || Number(index) > arr.length - 1}
+                disabled={loading || values.indexInput === '' || Number(values.indexInput) > arr.length - 1}
             />
           </div>
         </div>
@@ -288,7 +292,7 @@ export const ListPage: React.FC = () => {
           {arr.map((item, index) =>
             <li className={styles.circleItem} key={index}>
               {loading && (addToHeadOperation || addToTailOperation || addByIndexOperation) && index === inputValueIndex &&
-                  <Circle extraClass={styles.circle_position_top} letter={inputValue} state={ElementStates.Changing} isSmall/>}
+                  <Circle extraClass={styles.circle_position_top} letter={values.listInput} state={ElementStates.Changing} isSmall/>}
               {loading && (deleteFromTheHeadOperation || deleteFromTheTailOperation || deleteByIndexOperation) && index === inputValueIndex &&
                   <Circle extraClass={styles.circle_position_bottom} letter={circleTempValue} state={ElementStates.Changing} isSmall/>}
               {arr.length - 1 !== index &&

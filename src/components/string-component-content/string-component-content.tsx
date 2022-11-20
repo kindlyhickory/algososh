@@ -5,6 +5,7 @@ import styles from './string-component-content.module.css';
 import {ElementStates} from "../../types/element-states";
 import {delay} from "../../utils/utils";
 import {Circle} from "../ui/circle/circle";
+import {useForm} from "../../hooks/useForm";
 
 type TArray = {
     value: string;
@@ -19,12 +20,10 @@ export const swap = (arr: TArray[], firstIndex: number, secondIndex: number) => 
 };
 
 export const StringComponentContent: React.FC = () => {
+    const {values, handleChange, setValues} = useForm({stringInput: ''});
+
     const [loader, setLoader] = useState(false);
-    const [inputVal, setInputVal] = useState('');
     const [strArr, setStrArr] = useState<Array<TArray>>([]);
-    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setInputVal(event.target.value);
-    }
 
     const reverse = async (string: string) => {
         setLoader(!loader);
@@ -57,7 +56,7 @@ export const StringComponentContent: React.FC = () => {
     }
 
     const onButtonClick = () => {
-        reverse(inputVal);
+        reverse(values.stringInput);
         console.log(strArr);
     }
 
@@ -65,16 +64,17 @@ export const StringComponentContent: React.FC = () => {
         <>
             <div className={styles.inputContainer}>
                 <Input
+                    name="stringInput"
                     extraClass={styles.inputContainer__input}
                     maxLength={11}
                     isLimitText={true}
-                    value={inputVal}
-                    onChange={onChange}
+                    value={values.stringInput}
+                    onChange={handleChange}
                 />
                 <Button
                     text="Развернуть"
                     onClick={onButtonClick}
-                    disabled={!inputVal}
+                    disabled={!values.stringInput}
                     isLoader={loader}
                 />
             </div>

@@ -7,6 +7,7 @@ import {ElementStates} from "../../types/element-states";
 import {Queue} from "../../data-structures/queue";
 import {delay} from "../../utils/utils";
 import {Circle} from "../ui/circle/circle";
+import {useForm} from "../../hooks/useForm";
 
 type TQueueElem = {
   value?: string;
@@ -18,16 +19,18 @@ export const QueuePage: React.FC = () => {
 
   const [startQueue] = useState(Array.from({ length: 7 }, () => ({ value: '', color: ElementStates.Default })));
 
+  const {values, handleChange, setValues} = useForm({queueInput: ''});
+
   const [queue, setQueue] = useState(new Queue<TQueueElem>(7));
 
   const [queueArr, setQueueArr] = useState<TQueueElem[]>(startQueue);
   const [disableButtons, setDisableButtons] = useState(false);
 
-  const [inputVal, setInputVal] = useState('');
+  // const [inputVal, setInputVal] = useState('');
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputVal(e.target.value);
-  };
+  // const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setInputVal(e.target.value);
+  // };
 
   const enqArr = (value: string, color: ElementStates) => {
     queueArr[queue.getTail() - 1] = {value: value, color: color}
@@ -35,14 +38,14 @@ export const QueuePage: React.FC = () => {
   }
 
   const handleAdd = async () => {
-    if (inputVal) {
-      queue.enqueue({value: inputVal, color: ElementStates.Default});
+    if (values.queueInput) {
+      queue.enqueue({value: values.queueInput, color: ElementStates.Default});
       setQueue(queue);
       enqArr('', ElementStates.Changing)
       await delay(500);
-      enqArr(inputVal, ElementStates.Changing)
-      enqArr(inputVal, ElementStates.Default)
-      setInputVal('');
+      enqArr(values.queueInput, ElementStates.Changing)
+      enqArr(values.queueInput, ElementStates.Default)
+      setValues({...values, queueInput: ''});
     }
   }
 
@@ -74,16 +77,17 @@ export const QueuePage: React.FC = () => {
         <div className={styles.manageContainer__queueButtons}>
           <Input
               extraClass={styles.input}
-              onChange={onChange}
+              onChange={handleChange}
               isLimitText={true}
               type="text"
-              value={inputVal}
+              value={values.queueInput}
               maxLength={4}
+              name="queueInput"
           />
           <Button
               extraClass={styles.addButton}
               text='Добавить'
-              disabled={!inputVal || disableButtons}
+              disabled={!values.queueInput || disableButtons}
               onClick={handleAdd}
           />
           <Button
