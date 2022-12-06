@@ -76,6 +76,7 @@ export const StringComponentContent: React.FC = () => {
                     onClick={onButtonClick}
                     disabled={!values.stringInput}
                     isLoader={loader}
+                    type="submit"
                 />
             </div>
             <div>
