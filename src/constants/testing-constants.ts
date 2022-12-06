@@ -1,0 +1,5 @@
+export const CIRCLE_CLASS_SELECTOR = '[data-testid=circle]'
+export const CIRCLE_LETTER_CLASS_SELECTOR = '[data-testid=circle-letter]'
+export const CIRCLE_TAIL_CLASS_SELECTOR = '[data-testid=circle-tail]'
+export const CIRCLE_HEAD_CLASS_SELECTOR = '[data-testid=circle-head]'
+export const CIRCLE_INDEX_CLASS_SELECTOR = '[data-testid=circle-index]'

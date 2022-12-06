@@ -64,6 +64,7 @@ export const FibonacciPage: React.FC = () => {
               disabled={isButtonDisabled}
               isLoader={loader}
               onClick={handleButton}
+              type="submit"
           />
         </div>
       </>
