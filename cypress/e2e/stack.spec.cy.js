@@ -10,7 +10,7 @@ import {
 } from "../../src/constants/testing-constants";
 
 describe("stack page display correctly", function () {
-    before(function () {
+    before(() => {
         cy.visit(`${TEST_URL}/stack`);
     });
     it("button disabled if input is empty", function () {
@@ -23,7 +23,7 @@ describe("stack page display correctly", function () {
     const secondElement = 'b';
     const thirdElement = 'c';
 
-    it("should elements add to stack correctly", function () {
+    it("should elements add to stack correctly", () => {
         cy.get("input").type(firstElement);
         cy.get(ADD_BUTTON_SELECTOR).click();
 
@@ -91,7 +91,7 @@ describe("stack page display correctly", function () {
         });
     });
 
-    it("should elements delete from the stack correctly", function () {
+    it("should elements delete from the stack correctly", () => {
         cy.get(REMOVE_BUTTON_SELECTOR).click();
 
         cy.get(CIRCLE_CLASS_SELECTOR).within(($letters) => {
@@ -162,7 +162,7 @@ describe("stack page display correctly", function () {
         cy.get(CIRCLE_MAIN_CLASS_SELECTOR).should("have.length", 0);
     });
 
-    it("should reset button works correctly", function () {
+    it("should reset button works correctly", () => {
         cy.get("input").should("be.empty");
         cy.get("input").type(firstElement);
         cy.get(ADD_BUTTON_SELECTOR).click();
