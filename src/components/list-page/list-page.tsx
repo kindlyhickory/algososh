@@ -9,6 +9,7 @@ import { ElementStates } from "../../types/element-states";
 import {delay, getRandomInt} from "../../utils/utils";
 import {LinkedList} from "../../data-structures/list";
   import {useForm} from "../../hooks/useForm";
+  import {DELAY_LOW} from "../../constants/constants";
 
 type TItem = {
   value: string;
@@ -64,13 +65,13 @@ export const ListPage: React.FC = () => {
       setLoading(true);
       setInputValueIndex(0);
       setAddToHeadOperation(true);
-      await delay(500);
+      await delay(DELAY_LOW);
       list.prepend(values.listInput);
       setAddToHeadOperation(false);
       const newArr = list.getArrWithColor();
       newArr[0].color = ElementStates.Modified;
       setArr(newArr);
-      await delay(500);
+      await delay(DELAY_LOW);
       newArr[0].color = ElementStates.Default;
       setArr(newArr);
     }
@@ -85,13 +86,13 @@ export const ListPage: React.FC = () => {
       setLoading(true);
       setInputValueIndex(list.listLength - 1);
       setAddToTailOperation(true);
-      await delay(500);
+      await delay(DELAY_LOW);
       list.append(values.listInput);
       setAddToTailOperation(false);
       const newArr = list.getArrWithColor();
       newArr[newArr.length - 1].color = ElementStates.Modified;
       setArr(newArr);
-      await delay(500);
+      await delay(DELAY_LOW);
       newArr[newArr.length - 1].color = ElementStates.Default;
       setArr(newArr);
     };
@@ -110,7 +111,7 @@ export const ListPage: React.FC = () => {
       setInputValueIndex(0);
       newArr[0].value = '';
       setArr(newArr);
-      await delay(500);
+      await delay(DELAY_LOW);
       list.deleteHead();
       setDeleteFromTheHeadOperation(false);
       setArr(list.getArrWithColor());
@@ -129,7 +130,7 @@ export const ListPage: React.FC = () => {
       setInputValueIndex(list.listLength - 1);
       newArr[newArr.length - 1].value = '';
       setArr(newArr);
-      await delay(500);
+      await delay(DELAY_LOW);
       list.deleteTail();
       setDeleteFromTheTailOperation(false);
       setArr(list.getArrWithColor());
@@ -145,7 +146,7 @@ export const ListPage: React.FC = () => {
     const newArr = list.getArrWithColor();
     for (let i = 0; i <= Number(values.indexInput); i++) {
       setInputValueIndex(i);
-      await delay(500);
+      await delay(DELAY_LOW);
       if (i < Number(values.indexInput)) {
         newArr[i].color = ElementStates.Changing;
         setArr(newArr);
@@ -158,7 +159,7 @@ export const ListPage: React.FC = () => {
     finalArr[Number(values.indexInput)].color = ElementStates.Modified;
 
     setArr(finalArr);
-    await delay(500);
+    await delay(DELAY_LOW);
     finalArr[Number(values.indexInput)].color = ElementStates.Default;
     setArr(finalArr);
     setLoading(false);
@@ -173,17 +174,17 @@ export const ListPage: React.FC = () => {
       setLoading(true);
       const newArr = list.getArrWithColor();
       for (let i = 0; i <= Number(values.indexInput); i++) {
-        await delay(500);
+        await delay(DELAY_LOW);
         newArr[i].color = ElementStates.Changing;
         setArr([...newArr]);
       };
-      await delay(500);
+      await delay(DELAY_LOW);
       setCircleTempValue(newArr[Number(values.indexInput)].value);
       newArr[Number(values.indexInput)].value = '';
       setDeleteByIndexOperation(true);
       newArr[Number(values.indexInput)].color = ElementStates.Default;
       setInputValueIndex(Number(values.indexInput));
-      await delay(500);
+      await delay(DELAY_LOW);
       list.deleteByIndex(Number(values.indexInput));
       setArr(list.getArrWithColor());
       setDeleteByIndexOperation(false);
@@ -229,6 +230,7 @@ export const ListPage: React.FC = () => {
                 onChange={handleChange}
                 disabled={loading}
                 name="listInput"
+                data-testid="input-val"
             />
             <Button
                 extraClass={styles.button}
@@ -236,6 +238,7 @@ export const ListPage: React.FC = () => {
                 onClick={addToHead}
                 isLoader={ loading && buttonName === ButtonName.AddToHead }
                 disabled={values.listInput === '' || loading}
+                data-testid='add-to-head'
             />
             <Button
                 extraClass={styles.button}
@@ -243,6 +246,7 @@ export const ListPage: React.FC = () => {
                 onClick={addToTail}
                 isLoader={ loading && buttonName === ButtonName.AddToTail}
                 disabled={values.listInput === '' || loading}
+                data-testid='add-to-tail'
             />
             <Button
                 extraClass={styles.button}
@@ -250,6 +254,7 @@ export const ListPage: React.FC = () => {
                 onClick={deleteFromTheHead}
                 isLoader={ loading && buttonName === ButtonName.DeleteFromTheHead }
                 disabled={ loading || arr.length === 0}
+                data-testid='remove-from-head'
             />
             <Button
                 extraClass={styles.button}
@@ -257,6 +262,7 @@ export const ListPage: React.FC = () => {
                 onClick={deleteFromTheTail}
                 isLoader={ loading && buttonName === ButtonName.DeleteFromTheTail  }
                 disabled={ loading || arr.length === 0}
+                data-testid='remove-from-tail'
             />
           </div>
           <div className={styles.manageContainer__item}>
@@ -270,6 +276,7 @@ export const ListPage: React.FC = () => {
                 onChange={handleChange}
                 disabled={loading}
                 name="indexInput"
+                data-testid='index-val'
             />
             <Button
                 extraClass={styles.indexButton}
@@ -277,6 +284,7 @@ export const ListPage: React.FC = () => {
                 onClick={addByIndex}
                 isLoader={loading && buttonName === ButtonName.AddByIndex }
                 disabled={ loading || !values.listInput || !values.indexInput || Number(values.indexInput) > arr.length - 1}
+                data-testid="add-to-index"
             />
             <Button
                 extraClass={styles.indexButton}
@@ -284,17 +292,18 @@ export const ListPage: React.FC = () => {
                 onClick={deleteByIndex}
                 isLoader={loading && buttonName === ButtonName.DeleteByIndex }
                 disabled={loading || values.indexInput === '' || Number(values.indexInput) > arr.length - 1}
+                data-testid="remove-from-index"
             />
           </div>
         </div>
       </div>
-        <ul className={styles.circlesContainer}>
+        <ul className={`${styles.circlesContainer} circles-list`}>
           {arr.map((item, index) =>
             <li className={styles.circleItem} key={index}>
               {loading && (addToHeadOperation || addToTailOperation || addByIndexOperation) && index === inputValueIndex &&
-                  <Circle extraClass={styles.circle_position_top} letter={values.listInput} state={ElementStates.Changing} isSmall/>}
+                  <Circle extraClass={`${styles.circle_position_top} small-circle_top`} letter={values.listInput} state={ElementStates.Changing} isSmall data-id='top-circle'/>}
               {loading && (deleteFromTheHeadOperation || deleteFromTheTailOperation || deleteByIndexOperation) && index === inputValueIndex &&
-                  <Circle extraClass={styles.circle_position_bottom} letter={circleTempValue} state={ElementStates.Changing} isSmall/>}
+                  <Circle extraClass={`${styles.circle_position_bottom} small-circle_bottom`} letter={circleTempValue} state={ElementStates.Changing} isSmall data-id='bottom-circle'/>}
               {arr.length - 1 !== index &&
                 <div className={styles.arrow}>
                   <ArrowIcon/>

@@ -89,18 +89,21 @@ export const QueuePage: React.FC = () => {
               text='Добавить'
               disabled={!values.queueInput || disableButtons}
               onClick={handleAdd}
+              data-testid='add-button'
           />
           <Button
               extraClass={styles.removeButton}
               text='Удалить'
               disabled={queue.isEmpty() || disableButtons}
               onClick={handleRemove}
+              data-testid='remove-button'
           />
         </div>
         <Button
             disabled={(!queue.getHead() && !queue.getTail()) || disableButtons}
             text="Очистить"
             onClick={handleReset}
+            data-testid='reset-button'
         />
       </div>
       <ul className={styles.circlesContainer} >

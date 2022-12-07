@@ -7,4 +7,15 @@ export const CIRCLE_INDEX_CLASS_SELECTOR = '[data-testid=circle-index]';
 export const REMOVE_BUTTON_SELECTOR = '[data-testid=remove-button]';
 export const ADD_BUTTON_SELECTOR = '[data-testid=add-button]';
 export const RESET_BUTTON_SELECTOR = '[data-testid=reset-button]';
-
+export const ADD_TO_HEAD_BUTTON_SELECTOR = '[data-testid=add-to-head]';
+export const ADD_TO_TAIL_BUTTON_SELECTOR = '[data-testid=add-to-tail]';
+export const REMOVE_FROM_HEAD_BUTTON_SELECTOR = '[data-testid=remove-from-head]';
+export const REMOVE_FROM_TAIL_BUTTON_SELECTOR = '[data-testid=remove-from-tail]';
+export const ADD_TO_INDEX_BUTTON_SELECTOR = '[data-testid=add-to-index]';
+export const REMOVE_FROM_INDEX_BUTTON_SELECTOR = '[data-testid=remove-from-index]';
+export const ARROW_SELECTOR = '[data-testid=arrow]';
+export const INPUT_VALUE_SELECTOR = '[data-testid=input-val]';
+export const INDEX_VALUE_SELECTOR = '[data-testid=index-val]';
+export const TOP_CIRCLE_SELECTOR = '[class*=small-circle_top]';
+export const BOTTOM_CIRCLE_SELECTOR = '[class*=small-circle_bottom]';
+export const SMALL_CIRCLE_SELECTOR = '[class*=small]';
