@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import styles from './sorting-page.module.css';
 import {RadioInput} from "../ui/radio-input/radio-input";
@@ -13,47 +13,9 @@ type TSortArray = {
   color: ElementStates;
 };
 
-export const SortingPage: React.FC = () => {
-  const [isDisabledButton, setIsDisabledButton] = useState(false);
-  const [sortWay, setSortWay] = useState('choose');
-  const [sortArray, setSortArray] = useState<TSortArray[]>([]);
-
-  const [direction, setDirection] = useState<Direction>();
-
-  const makeNewArr = () => {
-    setSortArray([...makeRandomArr()]);
-  };
-
-  const onChangeSortWay = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSortWay(event.target.value);
-  }
-
-  const bubbleSort = async (array: TSortArray[], direction: Direction) => {
-    setIsDisabledButton(true);
-    for (let i = 0; i < array.length; i++) {
-      for (let j = 0; j < array.length - i - 1; j++) {
-        array[j].color = ElementStates.Changing;
-        array[j + 1].color = ElementStates.Changing;
-        setSortArray([...array]);
-        await delay(400);
-        if (direction === Direction.Descending) {
-          if (array[j].value < array[j + 1].value) {
-            [array[j].value, array[j + 1].value] = [array[j + 1].value, array[j].value];
-          }
-        } else if (direction === Direction.Ascending) {
-          if (array[j].value > array[j + 1].value) {
-            [array[j].value, array[j + 1].value] = [array[j + 1].value, array[j].value];
-          }
-        }
-        array[j].color = ElementStates.Default;
-      }
-      array[array.length - i - 1].color = ElementStates.Modified;
-    }
-    setIsDisabledButton(false);
-  }
-
-  const selectionSort = async (array: TSortArray[], direction: Direction) => {
-    setIsDisabledButton(true);
+export const selectionSort = async (array: TSortArray[], direction: Direction, setIsDisabledButton: Dispatch<SetStateAction<boolean>>, setSortArray: Dispatch<SetStateAction<TSortArray[]>>) => {
+  setIsDisabledButton(true);
+  if (array.length > 1) {
     for (let i = 0; i < array.length - 1; i++) {
       let ind = i;
       for (let j = i + 1; j < array.length; j++) {
@@ -77,16 +39,58 @@ export const SortingPage: React.FC = () => {
       array[i].color = ElementStates.Modified;
     }
     array[array.length - 1].color = ElementStates.Modified;
-    setIsDisabledButton(false);
+  }
+  setIsDisabledButton(false);
+}
+
+export const bubbleSort = async (array: TSortArray[], direction: Direction, setIsDisabledButton: Dispatch<SetStateAction<boolean>>, setSortArray: Dispatch<SetStateAction<TSortArray[]>>) => {
+  setIsDisabledButton(true);
+  if (array.length > 1) {
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < array.length - i - 1; j++) {
+        array[j].color = ElementStates.Changing;
+        array[j + 1].color = ElementStates.Changing;
+        setSortArray([...array]);
+        await delay(400);
+        if (direction === Direction.Descending) {
+          if (array[j].value < array[j + 1].value) {
+            [array[j].value, array[j + 1].value] = [array[j + 1].value, array[j].value];
+          }
+        } else if (direction === Direction.Ascending) {
+          if (array[j].value > array[j + 1].value) {
+            [array[j].value, array[j + 1].value] = [array[j + 1].value, array[j].value];
+          }
+        }
+        array[j].color = ElementStates.Default;
+      }
+      array[array.length - i - 1].color = ElementStates.Modified;
+    }
+  }
+  setIsDisabledButton(false);
+}
+
+export const SortingPage: React.FC = () => {
+  const [isDisabledButton, setIsDisabledButton] = useState(false);
+  const [sortWay, setSortWay] = useState('choose');
+  const [sortArray, setSortArray] = useState<TSortArray[]>([]);
+
+  const [direction, setDirection] = useState<Direction>();
+
+  const makeNewArr = () => {
+    setSortArray([...makeRandomArr()]);
+  };
+
+  const onChangeSortWay = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSortWay(event.target.value);
   }
 
   const handleClick = (direction: Direction) => {
     setDirection(direction);
     if (sortWay === 'bubble') {
-      bubbleSort(sortArray, direction);
+      bubbleSort(sortArray, direction, setIsDisabledButton, setSortArray);
     }
     if (sortWay === 'choose') {
-      selectionSort(sortArray, direction);
+      selectionSort(sortArray, direction, setIsDisabledButton, setSortArray);
     }
   }
 

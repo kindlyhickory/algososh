@@ -29,7 +29,7 @@ export const StackPage: React.FC = () => {
       })
       setValues({...values, stackInput: ''});
       setStackItems([...stack.getElements()]);
-      await delay(300);
+      await delay(400);
       stack.peek.color = ElementStates.Default;
       setStackItems([...stack.getElements()]);
     }
@@ -43,7 +43,7 @@ export const StackPage: React.FC = () => {
   const handleRemove = async () => {
     stack.peek.color = ElementStates.Changing;
     setStackItems([...stack.getElements()]);
-    await delay(300);
+    await delay(400);
     stack.pop();
     setStackItems([...stack.getElements()])
   }
@@ -65,18 +65,21 @@ export const StackPage: React.FC = () => {
             text='Добавить'
             disabled={!values.stackInput}
             onClick={handleAdd}
+            data-testid="add-button"
           />
           <Button
               extraClass={styles.removeButton}
               text='Удалить'
               disabled={!stackItems.length}
               onClick={handleRemove}
+              data-testid="remove-button"
           />
         </div>
         <Button
           text="Очистить"
           onClick={handleReset}
           disabled={!stackItems.length}
+          data-testid="reset-button"
         />
       </div>
       <ul className={styles.circlesBox} >
